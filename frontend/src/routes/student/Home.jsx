@@ -4,11 +4,14 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { listCases } from '../../api/cases';
 import { listMine } from '../../api/submissions';
+import { AchievementBadge } from '../../components/AchievementBadge';
 import { TopBar } from '../../components/Layout/TopBar';
 import { Avatar } from '../../components/ui/Avatar';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Skeleton } from '../../components/ui/Skeleton';
+import { useCountUp } from '../../lib/animation';
+import { evaluateBadges } from '../../lib/badges';
 import { cn } from '../../lib/cn';
 import { formatScore, formatStatus, statusTone } from '../../lib/format';
 import { haptic } from '../../lib/telegram';
@@ -92,6 +95,27 @@ export default function Home() {
   const completedCount = completed.length;
   const progressPct = totalCases ? Math.round((completedCount / totalCases) * 100) : 0;
 
+  // Achievements — show 4: earned first, then locked-with-progress, then locked.
+  const badgePreview = useMemo(() => {
+    if (!cases.length) return [];
+    const items = evaluateBadges(subs, cases);
+    const earned = items.filter((b) => b.state.earned);
+    const inProgress = items
+      .filter((b) => !b.state.earned && b.state.target)
+      .sort(
+        (a, b) =>
+          (b.state.progress ?? 0) / b.state.target -
+          (a.state.progress ?? 0) / a.state.target,
+      );
+    const rest = items.filter(
+      (b) => !b.state.earned && !b.state.target,
+    );
+    return [...earned, ...inProgress, ...rest].slice(0, 4);
+  }, [subs, cases]);
+
+  const completedDisplay = useCountUp(completedCount, 800);
+  const pointsDisplay = useCountUp(totalPoints, 900);
+
   if (loading) {
     return (
       <>
@@ -118,15 +142,19 @@ export default function Home() {
         className="relative mb-4 overflow-hidden rounded-3xl border border-border bg-surface p-5"
         style={{
           backgroundImage:
-            'radial-gradient(120% 80% at 100% 0%, rgba(108, 99, 255, 0.18), transparent 60%), radial-gradient(80% 60% at 0% 100%, rgba(79, 209, 197, 0.12), transparent 70%)',
+            'radial-gradient(120% 80% at 100% 0%, rgba(108, 99, 255, 0.22), transparent 60%), radial-gradient(80% 60% at 0% 100%, rgba(79, 209, 197, 0.14), transparent 70%)',
         }}
       >
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/15 blur-3xl motion-safe:animate-breath-pulse"
+        />
         <p className="label-eyebrow mb-3">прогресс</p>
 
         <div className="flex items-end justify-between gap-4">
           <div>
-            <p className="font-display text-[44px] leading-none tracking-tightest text-ink">
-              {completedCount}
+            <p className="font-display text-[44px] leading-none tracking-tightest text-ink tabular-nums">
+              {Math.round(completedDisplay)}
               <span className="text-ink-faint">/{totalCases}</span>
             </p>
             <p className="mt-1 text-[13px] text-ink-muted">кейс бітті</p>
@@ -134,7 +162,7 @@ export default function Home() {
 
           <div className="text-right">
             <p className="font-mono text-[28px] tabular-nums leading-none text-primary-soft">
-              {formatScore(totalPoints)}
+              {formatScore(pointsDisplay)}
             </p>
             <p className="mt-1 font-mono text-[10px] uppercase tracking-ticker text-ink-faint">
               жалпы балл
@@ -221,6 +249,32 @@ export default function Home() {
               </li>
             ))}
           </ul>
+        </section>
+      ) : null}
+
+      {/* Achievements preview */}
+      {badgePreview.length ? (
+        <section className="mb-4 rounded-2xl border border-border bg-surface p-4">
+          <header className="mb-3 flex items-center justify-between">
+            <p className="label-eyebrow">жетістіктер</p>
+            <Link
+              to="/me"
+              onClick={() => haptic('light')}
+              className="font-mono text-[10px] uppercase tracking-ticker text-ink-muted hover:text-ink"
+            >
+              барлығы →
+            </Link>
+          </header>
+          <div className="grid grid-cols-4 gap-3">
+            {badgePreview.map((b) => (
+              <AchievementBadge
+                key={b.slug}
+                badge={b}
+                state={b.state}
+                size="sm"
+              />
+            ))}
+          </div>
         </section>
       ) : null}
 

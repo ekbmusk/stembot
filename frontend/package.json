@@ -12,6 +12,7 @@
   "dependencies": {
     "@hello-pangea/dnd": "^17.0.0",
     "axios": "^1.7.7",
+    "canvas-confetti": "^1.9.4",
     "katex": "^0.16.11",
     "lucide-react": "^0.468.0",
     "react": "^18.3.1",

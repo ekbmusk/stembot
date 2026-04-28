@@ -5,7 +5,7 @@ import { haptic } from '../../lib/telegram';
 
 const variants = {
   primary:
-    'bg-primary text-white hover:bg-primary-soft active:bg-primary-dim shadow-soft',
+    'bg-gradient-to-br from-primary-soft to-primary text-white hover:from-primary hover:to-primary-dim active:from-primary-dim active:to-primary-dim shadow-soft',
   secondary:
     'bg-surface-2 text-ink border border-border-strong hover:border-primary/60 hover:text-white',
   ghost: 'text-ink-muted hover:text-ink hover:bg-surface-2',

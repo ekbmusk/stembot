@@ -52,6 +52,12 @@
       radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.035) 1px, transparent 0);
     background-size: auto, 22px 22px;
   }
+  /* Soft top-right accent fill for "sticker-like" cards.
+     Reads var(--subject) so a single utility serves every topic colour. */
+  .sticker-glow {
+    background-image:
+      radial-gradient(80% 100% at 100% 0%, color-mix(in oklab, var(--subject, #6C63FF) 18%, transparent), transparent 60%);
+  }
   .ring-subject {
     box-shadow: inset 0 0 0 1px var(--subject, theme('colors.primary.DEFAULT'));
   }
@@ -93,4 +99,16 @@
 /* Lucide — enforce single stroke style across the app. */
 .lucide {
   stroke-width: 1.5;
+}
+
+/* Honour user's motion preference everywhere. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

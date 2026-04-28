@@ -97,7 +97,12 @@ function CaseCard({ c, status }) {
       style={topicStyle(topic)}
       className="group block animate-fade-up"
     >
-      <article className="ring-subject relative overflow-hidden rounded-2xl bg-surface transition group-active:scale-[0.99]">
+      <article
+        className={cn(
+          'ring-subject sticker-glow relative overflow-hidden rounded-2xl bg-surface transition group-active:scale-[0.99]',
+          status === 'done' && 'motion-safe:animate-breath-pulse',
+        )}
+      >
         <div className="absolute inset-x-0 top-0 h-px" style={{ background: 'var(--subject)' }} />
 
         <div className="flex gap-3 p-4">

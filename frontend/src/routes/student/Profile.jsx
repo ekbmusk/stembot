@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { listCases } from '../../api/cases';
 import { listMine } from '../../api/submissions';
+import { AchievementGallery } from '../../components/AchievementGallery';
 import { TopBar } from '../../components/Layout/TopBar';
 import { Avatar } from '../../components/ui/Avatar';
 import { Badge } from '../../components/ui/Badge';
@@ -72,6 +73,8 @@ export default function Profile() {
         <StatTile label="Бітті" value={stats.done} />
         <StatTile label="Балл" value={formatScore(stats.total)} mono />
       </div>
+
+      <AchievementGallery submissions={subs} cases={cases} />
 
       <p className="label-eyebrow mb-2 px-1">тарих</p>
 

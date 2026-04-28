@@ -66,11 +66,22 @@ export default {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
         },
+        'breath-pulse': {
+          '0%, 100%': { opacity: '0.85' },
+          '50%': { opacity: '1' },
+        },
+        'pop-in': {
+          '0%': { opacity: 0, transform: 'scale(0.7)' },
+          '60%': { opacity: 1, transform: 'scale(1.06)' },
+          '100%': { opacity: 1, transform: 'scale(1)' },
+        },
       },
       animation: {
         'fade-up': 'fade-up 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both',
         'fade-in': 'fade-in 200ms ease-out both',
         shimmer: 'shimmer 1.6s linear infinite',
+        'breath-pulse': 'breath-pulse 4s ease-in-out infinite',
+        'pop-in': 'pop-in 360ms cubic-bezier(0.34, 1.56, 0.64, 1) both',
       },
       backgroundImage: {
         'grid-faint':

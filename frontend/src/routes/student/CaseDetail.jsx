@@ -15,17 +15,21 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { listCases } from '../../api/cases';
 import { listMine } from '../../api/submissions';
 import { CaseBlocks } from '../../components/CaseBlocks';
 import { FormulaRenderer } from '../../components/FormulaRenderer';
 import { TopBar } from '../../components/Layout/TopBar';
 import { TaskInput } from '../../components/TaskInput';
+import { UnlockOverlay } from '../../components/UnlockOverlay';
 import { VideoPlayer } from '../../components/VideoPlayer';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Card, CardBody } from '../../components/ui/Card';
 import { Lightbox } from '../../components/ui/Lightbox';
 import { Skeleton } from '../../components/ui/Skeleton';
+import { celebrate, useCountUp } from '../../lib/animation';
+import { diffEarned, getEarnedSlugs } from '../../lib/badges';
 import { DIFFICULTY_KK, caseTopic, topicMeta, topicStyle } from '../../lib/topics';
 import { haptic } from '../../lib/telegram';
 import { useCaseStore } from '../../store/caseStore';
@@ -379,6 +383,7 @@ function Review({ caseData, submission, onRetry, retrying }) {
   }, [caseData]);
 
   const isFullyGraded = submission.status === 'graded';
+  const scoreDisplay = useCountUp(submission.total_score ?? 0, 1100);
 
   return (
     <div style={topicStyle(topic)}>
@@ -429,8 +434,8 @@ function Review({ caseData, submission, onRetry, retrying }) {
 
         <div className="px-4 py-4">
           <p className="label-eyebrow mb-1">нәтижең</p>
-          <p className="font-display text-[44px] leading-none tracking-tightest text-ink">
-            {submission.total_score ?? 0}
+          <p className="font-display text-[44px] leading-none tracking-tightest text-ink tabular-nums">
+            {Math.round(scoreDisplay * 10) / 10}
             <span className="text-ink-faint"> / {totalPoints}</span>
           </p>
           <p className="mt-1 font-mono text-[11px] text-ink-faint">
@@ -505,6 +510,7 @@ export default function CaseDetail() {
   const [savingId, setSavingId] = useState(null);
   const [finalizing, setFinalizing] = useState(false);
   const [zoomSrc, setZoomSrc] = useState(null);
+  const [unlockedSlugs, setUnlockedSlugs] = useState([]);
 
   // Reset transient state when navigating between cases.
   useEffect(() => {
@@ -594,15 +600,44 @@ export default function CaseDetail() {
   async function onFinalize() {
     setFinalizing(true);
     try {
+      // Snapshot earned badges before this submission flips state.
+      const [allCases, mineBefore] = await Promise.all([
+        listCases().catch(() => []),
+        listMine().catch(() => []),
+      ]);
+      const prevEarned = getEarnedSlugs(mineBefore, allCases);
+
       const final = await finalize();
       haptic('success');
-      showToast(`Тапсырылды · ${final?.total_score ?? 0} балл`, 'success');
-      navigate('/me');
+
+      // Detect newly earned badges by re-fetching mine post-finalize.
+      const mineAfter = await listMine().catch(() => mineBefore);
+      const nextEarned = getEarnedSlugs(mineAfter, allCases);
+      const added = diffEarned(prevEarned, nextEarned);
+
+      celebrate(meta?.accent);
+      setExistingSub(final);
+
+      if (added.length) {
+        setUnlockedSlugs(added);
+        // The overlay's "Continue" button navigates onward.
+      } else {
+        showToast(
+          `Тапсырылды · ${final?.total_score ?? 0} балл`,
+          'success',
+        );
+        navigate('/me');
+      }
     } catch (e) {
       showToast(e.message ?? 'Тапсыра алмадым', 'danger');
     } finally {
       setFinalizing(false);
     }
+  }
+
+  function dismissUnlock() {
+    setUnlockedSlugs([]);
+    navigate('/me');
   }
 
   if (!currentCase) {
@@ -625,12 +660,17 @@ export default function CaseDetail() {
       (existingSub.status === 'submitted' || existingSub.status === 'graded')
     ) {
       return (
-        <Review
-          caseData={currentCase}
-          submission={existingSub}
-          onRetry={retry}
-          retrying={retrying}
-        />
+        <>
+          <Review
+            caseData={currentCase}
+            submission={existingSub}
+            onRetry={retry}
+            retrying={retrying}
+          />
+          {unlockedSlugs.length ? (
+            <UnlockOverlay slugs={unlockedSlugs} onClose={dismissUnlock} />
+          ) : null}
+        </>
       );
     }
     return (
