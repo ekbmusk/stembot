@@ -11,7 +11,12 @@ from fastapi import HTTPException, UploadFile
 
 logger = logging.getLogger(__name__)
 
-UPLOAD_ROOT = Path(__file__).resolve().parent.parent.parent / "uploads" / "submissions"
+_DEFAULT_UPLOAD_BASE = Path(__file__).resolve().parent.parent.parent / "uploads"
+# UPLOAD_DIR overrides the base for cloud deployments where the working
+# directory is ephemeral and we want files on a persistent volume.
+UPLOAD_ROOT = (
+    Path(os.getenv("UPLOAD_DIR", str(_DEFAULT_UPLOAD_BASE))) / "submissions"
+)
 MAX_FILE_SIZE = 15 * 1024 * 1024  # 15MB
 ALLOWED_EXTS = {
     ".jpg", ".jpeg", ".png", ".gif", ".webp", ".heic",
