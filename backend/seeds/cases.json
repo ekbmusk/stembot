@@ -299,7 +299,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "wN9FcL4sn7E",
+        "title_kk": "Автоматты есік: датчик пен жарық",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Бір LED шамның қуатын есепте (Вт): $U = 12$ В, $I = 0.2$ А.",
@@ -502,7 +509,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "p1ufHMDZoIY",
+        "title_kk": "Тізбектей және параллель қосылу",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Тізбектей қосудағы толық кедергі (Ом)?",
@@ -694,7 +708,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "PBoXTmtudMk",
+        "title_kk": "Жинағыш линза мен кескіннің пайда болуы",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Линза не үшін қажет?",
@@ -769,7 +790,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "U1JTqm6KcVU",
+        "title_kk": "Оптикалық талшық: толық ішкі шағылу",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Толық ішкі шағылу деген не?",
@@ -843,7 +871,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "iPWChM0KJSE",
+        "title_kk": "Жарықтың шағылу заңы",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Шағылу заңын өз сөзіңмен жаз.",
@@ -982,7 +1017,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "p0oT7nCccls",
+        "title_kk": "Телефонда голограмма пирамидасы",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Неліктен бейне ауада тұрғандай көрінеді?",
@@ -1036,7 +1078,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "P8mYqYd8qzU",
+        "title_kk": "Парашют моделі: ауа кедергісі",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Жұмысты есептеу формуласын жаз.",
@@ -1101,7 +1150,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "jn5WGigo1rg",
+        "title_kk": "Жылу алмасу: табиғат пен техникада",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Энергия деген не?",
@@ -1168,7 +1224,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "K14kY7AYDq8",
+        "title_kk": "Жылдамдықты өлшеу құрылғысы",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Қуат деген не? Формуласы қандай?",
@@ -1240,7 +1303,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "iXrnkoLCxNs",
+        "title_kk": "Су электр станциясының моделі",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Бұл жүйеде энергия қалай түрленеді?",
@@ -1308,7 +1378,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "L4UXZC0EB6s",
+        "title_kk": "Жылу алмасу түрлері",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Жылу алмасудың үш түрін ата.",
@@ -1380,7 +1457,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "1SdeQU98tPY",
+        "title_kk": "Жылу алмасу түрлері (1-бөлім)",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Жылу алмасу жолдарының рөлін жылыжай мысалында түсіндір.",
@@ -1442,7 +1526,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "Hf-WmtumNP0",
+        "title_kk": "Термос қалай жұмыс істейді",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Термоста жылудың қай механизмдері азайтылады?",
@@ -1503,7 +1594,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "Jc6bZS4Qtcs",
+        "title_kk": "Газ қысымы: молекулалардың әсері",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Жабық жүйенің герметикалығы неге маңызды?",
@@ -1577,7 +1675,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "HGCG6n_cMHw",
+        "title_kk": "Газ қысымы: МКТ көзқарасы",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Жабық жүйеде газ қысымы неге тұрақты болмауы мүмкін?",
@@ -1640,7 +1745,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "b5wmAw721ck",
+        "title_kk": "Электроскоп: зарядты анықтау",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Тізбектің элементтерін атап, қызметін түсіндір.",
@@ -1715,7 +1827,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "OqIHzDT5rw0",
+        "title_kk": "Сұйықтардағы электр тогы",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Қарындаштардың арақашықтығы артса, шам жарығы қалай өзгереді? Себебі?",
@@ -1798,7 +1917,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "QUg-jFK7904",
+        "title_kk": "Электр тогының жұмысы мен қуаты",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Қуаты 120 Вт құрылғы 4 сағат жұмыс істесе, қанша Вт·сағ жұмсайды?",
@@ -1866,7 +1992,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "mzaahtoVmZc",
+        "title_kk": "Электр тогының жұмысы (8 сынып)",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Сыныпта 6 шам әрқайсысы 40 Вт, 8 сағат жанады. Жалпы энергия (Вт·сағ)?",
@@ -1928,7 +2061,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "9SHFAT2ZHVw",
+        "title_kk": "Магниттік левитация: магниттер қалай ұшады",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Бірдей полюсті магниттер неге бір-бірін тебеді?",
@@ -1992,7 +2132,14 @@
         "qty": 1
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "provider": "youtube",
+        "external_id_or_url": "bj7bvbARfV4",
+        "title_kk": "Ферромагнетиктер: GetAClass тәжірибесі",
+        "position": 0
+      }
+    ],
     "tasks": [
       {
         "prompt_kk": "Магнит қандай металдарды тартады?",
