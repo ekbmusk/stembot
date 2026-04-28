@@ -90,7 +90,7 @@ export default function Dashboard() {
 
       {byTopic.length ? (
         <section className="mb-4 rounded-2xl border border-border bg-surface p-4">
-          <p className="label-eyebrow mb-3">тема бойынша</p>
+          <p className="label-eyebrow mb-3">тақырып бойынша</p>
           <div className="h-44">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={byTopic} margin={{ top: 4, right: 4, bottom: 4, left: -16 }}>

@@ -27,6 +27,41 @@ import { useUserStore } from '../../store/userStore';
 const COMPLETED = new Set(['submitted', 'graded']);
 
 /**
+ * Eight short STEM formulae scattered around the hero card with very low
+ * opacity. Reads as "this dashboard belongs to a physics app" without
+ * dominating the foreground stats.
+ */
+const FORMULAE = [
+  { text: 'E = mc²',    style: { top: '6%',  left: '4%',  transform: 'rotate(-7deg)',  fontSize: 13, opacity: 0.07 } },
+  { text: 'F = ma',     style: { top: '14%', right: '6%', transform: 'rotate(5deg)',   fontSize: 12, opacity: 0.06 } },
+  { text: 'pV = nRT',   style: { top: '38%', right: '2%', transform: 'rotate(-3deg)',  fontSize: 11, opacity: 0.05 } },
+  { text: 'P = UI',     style: { bottom: '8%', left: '6%', transform: 'rotate(4deg)',  fontSize: 12, opacity: 0.07 } },
+  { text: 'λ = v / f',  style: { bottom: '36%', left: '0%', transform: 'rotate(-9deg)', fontSize: 11, opacity: 0.05 } },
+  { text: 'I = U / R',  style: { bottom: '4%', right: '8%', transform: 'rotate(-6deg)', fontSize: 13, opacity: 0.07 } },
+  { text: 'Q = c·m·ΔT', style: { top: '60%', left: '38%', transform: 'rotate(8deg)',   fontSize: 10, opacity: 0.04 } },
+  { text: 'a² + b² = c²', style: { top: '2%', left: '52%', transform: 'rotate(-2deg)', fontSize: 10, opacity: 0.04 } },
+];
+
+function FormulaBackdrop() {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 select-none font-mono text-ink"
+    >
+      {FORMULAE.map((f, i) => (
+        <span
+          key={i}
+          className="absolute whitespace-nowrap tabular-nums"
+          style={f.style}
+        >
+          {f.text}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+/**
  * SVG donut where each topic occupies an arc proportional to how many cases
  * it owns. The dim portion of an arc is "available", the bright portion is
  * "done". The legend is inferred from the topic-mastery section right below
@@ -259,7 +294,8 @@ export default function Home() {
         className="relative mb-4 overflow-hidden rounded-3xl border border-border bg-surface p-5"
         style={{
           backgroundImage:
-            'radial-gradient(120% 80% at 100% 0%, rgba(108, 99, 255, 0.22), transparent 60%), radial-gradient(80% 60% at 0% 100%, rgba(79, 209, 197, 0.14), transparent 70%)',
+            'radial-gradient(120% 80% at 100% 0%, rgba(108, 99, 255, 0.22), transparent 60%), radial-gradient(80% 60% at 0% 100%, rgba(79, 209, 197, 0.14), transparent 70%), radial-gradient(circle at 1px 1px, rgba(255,255,255,0.03) 1px, transparent 0)',
+          backgroundSize: 'auto, auto, 14px 14px',
         }}
       >
         <span
@@ -267,7 +303,11 @@ export default function Home() {
           className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/15 blur-3xl motion-safe:animate-breath-pulse"
         />
 
-        <header className="mb-4 flex items-baseline justify-between">
+        {/* Background formula tableau — quiet STEM character that reads only
+            in the corners, never competes with the foreground stats. */}
+        <FormulaBackdrop />
+
+        <header className="relative mb-4 flex items-baseline justify-between">
           <p className="label-eyebrow">прогресс</p>
           <span className="font-mono text-[10px] tabular-nums uppercase tracking-ticker text-ink-faint">
             {progressPct}%
@@ -297,7 +337,7 @@ export default function Home() {
                 <span className="text-ink-faint"> / {byTopic.length}</span>
               </p>
               <p className="mt-1 font-mono text-[10px] uppercase tracking-ticker text-ink-faint">
-                тема басталды
+                тақырып басталды
               </p>
             </div>
           </div>
@@ -329,7 +369,7 @@ export default function Home() {
       {byTopic.length ? (
         <section className="mb-4 rounded-2xl border border-border bg-surface p-4">
           <header className="mb-3 flex items-center justify-between">
-            <p className="label-eyebrow">тема бойынша игеру</p>
+            <p className="label-eyebrow">тақырып бойынша игеру</p>
             <span className="font-mono text-[10px] uppercase tracking-ticker text-ink-faint">
               {byTopic.filter((t) => t.done > 0).length} / {byTopic.length}
             </span>

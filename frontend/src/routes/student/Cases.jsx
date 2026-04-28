@@ -247,7 +247,7 @@ export default function Cases() {
       <TopBar eyebrow="каталог" title="STEM кейстер" />
 
       <ChipRow
-        eyebrow="тема"
+        eyebrow="тақырып"
         active={topic}
         onChange={setTopic}
         options={TOPIC_ORDER
@@ -298,7 +298,7 @@ export default function Cases() {
       ) : visible.length === 0 ? (
         <EmptyState
           title="Бұл сүзгіге сай кейс жоқ"
-          hint="Басқа тема немесе деңгейді көріп көр."
+          hint="Басқа тақырып немесе деңгейді көріп көр."
         />
       ) : (
         <div className="space-y-3">
