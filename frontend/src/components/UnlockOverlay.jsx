@@ -1,8 +1,10 @@
+import { Send } from 'lucide-react';
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 import { findBadge } from '../lib/badges';
 import { celebrate } from '../lib/animation';
+import { shareSingleBadge } from '../lib/share';
 import { haptic } from '../lib/telegram';
 import { AchievementBadge } from './AchievementBadge';
 import { Button } from './ui/Button';
@@ -61,9 +63,22 @@ export function UnlockOverlay({ slugs, onClose }) {
             ))}
           </div>
 
-          <Button size="lg" className="mt-6 w-full" onClick={onClose}>
-            Жалғастыру
-          </Button>
+          <div className="mt-6 grid grid-cols-2 gap-2">
+            <Button
+              size="lg"
+              variant="secondary"
+              onClick={() => {
+                haptic('light');
+                shareSingleBadge(badges[0]);
+              }}
+            >
+              <Send size={15} />
+              Бөлісу
+            </Button>
+            <Button size="lg" onClick={onClose}>
+              Жалғастыру
+            </Button>
+          </div>
         </div>
       </div>
     </div>,

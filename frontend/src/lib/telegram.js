@@ -112,3 +112,16 @@ export function openExternal(url) {
     window.open(url, '_blank', 'noopener,noreferrer');
   }
 }
+
+/**
+ * Open a t.me link inside Telegram (share dialog, chats, …). Falls back to a
+ * plain window.open when called from a normal browser / dev shim.
+ */
+export function openTelegram(url) {
+  const w = tg();
+  if (w?.openTelegramLink) {
+    w.openTelegramLink(url);
+  } else {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+}
