@@ -89,7 +89,12 @@ _SEED_PATH = Path(__file__).resolve().parent.parent.parent / "seeds" / "cases.js
 
 
 def _seed_authored_cases(db: Session, path: Path = _SEED_PATH) -> None:
-    """Idempotently load cases from seeds/cases.json. Dedupe by title_kk."""
+    """Load cases from seeds/cases.json. Dedupes new cases by title_kk and
+    syncs the videos array for existing ones — so editing a case's video
+    list in the seed file flows through to a live DB without wiping it.
+    Text fields, blocks and tasks are NOT overwritten on existing cases —
+    those may have been edited via the teacher UI.
+    """
     if not path.exists():
         logger.warning("Case seed file missing: %s", path)
         return
@@ -97,13 +102,39 @@ def _seed_authored_cases(db: Session, path: Path = _SEED_PATH) -> None:
     with path.open("r", encoding="utf-8") as f:
         raw = json.load(f)
 
-    existing_titles = {
-        t for (t,) in db.query(STEMCase.title_kk).all()
+    existing_by_title = {
+        c.title_kk: c for c in db.query(STEMCase).all()
     }
 
     inserted = 0
+    videos_synced = 0
     for entry in raw:
-        if entry["title_kk"] in existing_titles:
+        existing = existing_by_title.get(entry["title_kk"])
+        if existing is not None:
+            seed_videos = entry.get("videos") or []
+            current = sorted(
+                ((v.provider, v.external_id_or_url) for v in existing.videos)
+            )
+            target = sorted(
+                ((v.get("provider", "youtube"), v["external_id_or_url"])
+                 for v in seed_videos)
+            )
+            if current != target:
+                db.query(CaseVideo).filter(
+                    CaseVideo.case_id == existing.id
+                ).delete()
+                for i, v in enumerate(seed_videos):
+                    db.add(
+                        CaseVideo(
+                            case_id=existing.id,
+                            provider=v.get("provider", "youtube"),
+                            external_id_or_url=v["external_id_or_url"],
+                            title_kk=v.get("title_kk"),
+                            duration_sec=v.get("duration_sec"),
+                            position=v.get("position", i),
+                        )
+                    )
+                videos_synced += 1
             continue
 
         case = STEMCase(
@@ -161,9 +192,11 @@ def _seed_authored_cases(db: Session, path: Path = _SEED_PATH) -> None:
 
         inserted += 1
 
-    if inserted:
+    if inserted or videos_synced:
         db.commit()
-        logger.info("Seeded %d authored cases", inserted)
+        logger.info(
+            "Cases seed: inserted=%d, videos_synced=%d", inserted, videos_synced
+        )
 
 
 def create_tables() -> None:
