@@ -134,7 +134,18 @@ export default function Home() {
       <TopBar
         eyebrow={`сәлем, ${user?.first_name?.toLowerCase?.() || 'оқушы'}`}
         title="STEM кейстер"
-        action={user ? <Avatar user={user} size={36} /> : null}
+        action={
+          user ? (
+            <Link
+              to="/me"
+              onClick={() => haptic('light')}
+              aria-label="Профиль"
+              className="rounded-full transition active:scale-[0.94]"
+            >
+              <Avatar user={user} size={36} />
+            </Link>
+          ) : null
+        }
       />
 
       {/* Hero / progress overview */}
