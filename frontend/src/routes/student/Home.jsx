@@ -1,15 +1,15 @@
 import { ArrowRight, Flame, PlayCircle, Sparkles } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { listCases } from '../../api/cases';
 import { listMine } from '../../api/submissions';
 import { AchievementBadge } from '../../components/AchievementBadge';
+import { SplashCurtain } from '../../components/SplashCurtain';
 import { TopBar } from '../../components/Layout/TopBar';
 import { Avatar } from '../../components/ui/Avatar';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
-import { Skeleton } from '../../components/ui/Skeleton';
 import { useCountUp } from '../../lib/animation';
 import { evaluateBadges } from '../../lib/badges';
 import { cn } from '../../lib/cn';
@@ -34,6 +34,13 @@ export default function Home() {
   const [subs, setSubs] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Splash curtain — show on first session entry; subsequent renders skip it.
+  const [splashShown, setSplashShown] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    return !sessionStorage.getItem('home_splash_seen');
+  });
+  const mountedAt = useRef(performance.now());
+
   useEffect(() => {
     Promise.all([listCases(), listMine()])
       .then(([c, s]) => {
@@ -42,6 +49,23 @@ export default function Home() {
       })
       .finally(() => setLoading(false));
   }, []);
+
+  // Hide splash once data is ready AND a minimum cover time has elapsed —
+  // keeps short loads from flashing the curtain off too quickly.
+  useEffect(() => {
+    if (!splashShown || loading) return undefined;
+    const elapsed = performance.now() - mountedAt.current;
+    const remaining = Math.max(0, 1300 - elapsed);
+    const t = setTimeout(() => {
+      try {
+        sessionStorage.setItem('home_splash_seen', '1');
+      } catch {
+        /* ignore */
+      }
+      setSplashShown(false);
+    }, remaining);
+    return () => clearTimeout(t);
+  }, [loading, splashShown]);
 
   // Latest submission per case (for progress accounting).
   const latestByCase = useMemo(() => {
@@ -116,21 +140,17 @@ export default function Home() {
   const completedDisplay = useCountUp(completedCount, 800);
   const pointsDisplay = useCountUp(totalPoints, 900);
 
-  if (loading) {
-    return (
-      <>
-        <TopBar eyebrow="басты" title={user?.first_name || 'STEM Case Bot'} />
-        <div className="space-y-3">
-          <Skeleton className="h-32" />
-          <Skeleton className="h-28" />
-          <Skeleton className="h-40" />
-        </div>
-      </>
-    );
-  }
-
   return (
     <>
+      <SplashCurtain visible={splashShown} />
+
+      <div
+        className="transition-all duration-[800ms] ease-[cubic-bezier(0.34,1.4,0.64,1)] motion-reduce:transition-none"
+        style={{
+          opacity: splashShown ? 0 : 1,
+          transform: splashShown ? 'translateY(64px)' : 'translateY(0)',
+        }}
+      >
       <TopBar
         eyebrow={`сәлем, ${user?.first_name?.toLowerCase?.() || 'оқушы'}`}
         title="STEM кейстер"
@@ -355,6 +375,7 @@ export default function Home() {
           ? `Сен бүгінге дейін ${completedCount} кейсті аяқтадың — әрі қарай!`
           : 'Бірінші кейс — ең қызықтысы. Бастайық.'}
       </p>
+      </div>
     </>
   );
 }

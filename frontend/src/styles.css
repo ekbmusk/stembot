@@ -101,6 +101,18 @@
   stroke-width: 1.5;
 }
 
+/* Splash curtain — endless STEM marquee. Two adjacent identical spans inside
+   each row sit edge-to-edge; translate-X by -50% slides the first copy off
+   exactly when the second copy fills its place — seamless loop. */
+@keyframes curtain-left {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+@keyframes curtain-right {
+  from { transform: translate3d(-50%, 0, 0); }
+  to   { transform: translate3d(0, 0, 0); }
+}
+
 /* Honour user's motion preference everywhere. */
 @media (prefers-reduced-motion: reduce) {
   *,
