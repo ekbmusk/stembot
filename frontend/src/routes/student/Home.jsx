@@ -26,6 +26,92 @@ import { useUserStore } from '../../store/userStore';
 
 const COMPLETED = new Set(['submitted', 'graded']);
 
+/**
+ * SVG donut where each topic occupies an arc proportional to how many cases
+ * it owns. The dim portion of an arc is "available", the bright portion is
+ * "done". The legend is inferred from the topic-mastery section right below
+ * — we don't repeat it here.
+ */
+function TopicRing({ byTopic, totalCases, displayCount }) {
+  const size = 132;
+  const stroke = 9;
+  const r = (size - stroke) / 2;
+  const cx = size / 2;
+  const cy = size / 2;
+  const C = 2 * Math.PI * r;
+  const total = byTopic.reduce((s, t) => s + t.total, 0) || totalCases || 1;
+  const gap = 3; // visual separator between segments
+
+  let cum = 0;
+  const segments = byTopic
+    .filter((t) => t.total > 0)
+    .map((t) => {
+      const segLen = (t.total / total) * C;
+      const filledLen = t.total ? (t.done / t.total) * segLen : 0;
+      const startOffset = cum;
+      cum += segLen;
+      return { ...t, segLen, filledLen, startOffset };
+    });
+
+  return (
+    <div
+      className="relative shrink-0"
+      style={{ width: size, height: size }}
+      aria-label={`${displayCount} of ${totalCases} cases completed`}
+    >
+      <svg
+        width={size}
+        height={size}
+        viewBox={`0 0 ${size} ${size}`}
+        className="-rotate-90"
+      >
+        {segments.map((s) => (
+          <g key={s.slug}>
+            <circle
+              cx={cx}
+              cy={cy}
+              r={r}
+              fill="none"
+              stroke={s.accent}
+              strokeOpacity="0.18"
+              strokeWidth={stroke}
+              strokeDasharray={`${Math.max(0, s.segLen - gap)} ${C}`}
+              strokeDashoffset={-s.startOffset}
+              strokeLinecap="round"
+            />
+            {s.filledLen > 0 ? (
+              <circle
+                cx={cx}
+                cy={cy}
+                r={r}
+                fill="none"
+                stroke={s.accent}
+                strokeWidth={stroke}
+                strokeDasharray={`${Math.max(0, s.filledLen - gap / 2)} ${C}`}
+                strokeDashoffset={-s.startOffset}
+                strokeLinecap="round"
+                style={{
+                  transition: 'stroke-dasharray 700ms ease-out',
+                  filter: `drop-shadow(0 0 6px color-mix(in oklab, ${s.accent} 50%, transparent))`,
+                }}
+              />
+            ) : null}
+          </g>
+        ))}
+      </svg>
+
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <p className="font-display text-[30px] leading-none tracking-tightest text-ink tabular-nums">
+          {displayCount}
+        </p>
+        <p className="mt-1.5 font-mono text-[10px] uppercase tracking-ticker text-ink-faint">
+          / {totalCases}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const user = useUserStore((s) => s.user);
   const navigate = useNavigate();
@@ -180,37 +266,41 @@ export default function Home() {
           aria-hidden
           className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/15 blur-3xl motion-safe:animate-breath-pulse"
         />
-        <p className="label-eyebrow mb-3">прогресс</p>
 
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <p className="font-display text-[44px] leading-none tracking-tightest text-ink tabular-nums">
-              {Math.round(completedDisplay)}
-              <span className="text-ink-faint">/{totalCases}</span>
-            </p>
-            <p className="mt-1 text-[13px] text-ink-muted">кейс бітті</p>
-          </div>
-
-          <div className="text-right">
-            <p className="font-mono text-[28px] tabular-nums leading-none text-primary-soft">
-              {formatScore(pointsDisplay)}
-            </p>
-            <p className="mt-1 font-mono text-[10px] uppercase tracking-ticker text-ink-faint">
-              жалпы балл
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-4">
-          <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-bg-deep/80">
-            <div
-              className="absolute inset-y-0 left-0 rounded-full bg-primary transition-[width] duration-500"
-              style={{ width: `${progressPct}%` }}
-            />
-          </div>
-          <p className="mt-1.5 text-right font-mono text-[10px] tabular-nums text-ink-faint">
+        <header className="mb-4 flex items-baseline justify-between">
+          <p className="label-eyebrow">прогресс</p>
+          <span className="font-mono text-[10px] tabular-nums uppercase tracking-ticker text-ink-faint">
             {progressPct}%
-          </p>
+          </span>
+        </header>
+
+        <div className="flex items-center gap-5">
+          <TopicRing
+            byTopic={byTopic}
+            totalCases={totalCases}
+            displayCount={Math.round(completedDisplay)}
+          />
+
+          <div className="min-w-0 flex-1 space-y-3">
+            <div>
+              <p className="font-display text-[34px] leading-none tracking-tightest text-primary-soft tabular-nums">
+                {formatScore(pointsDisplay)}
+              </p>
+              <p className="mt-1 font-mono text-[10px] uppercase tracking-ticker text-ink-faint">
+                жалпы балл
+              </p>
+            </div>
+            <div className="hairline" />
+            <div>
+              <p className="font-display text-[20px] leading-none tracking-tight text-ink tabular-nums">
+                {byTopic.filter((t) => t.done > 0).length}
+                <span className="text-ink-faint"> / {byTopic.length}</span>
+              </p>
+              <p className="mt-1 font-mono text-[10px] uppercase tracking-ticker text-ink-faint">
+                тема басталды
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
