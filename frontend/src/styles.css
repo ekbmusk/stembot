@@ -1,0 +1,96 @@
+@import 'katex/dist/katex.min.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html,
+  body,
+  #root {
+    @apply min-h-screen;
+  }
+  body {
+    @apply bg-bg text-ink font-sans antialiased;
+    font-feature-settings: 'cv11', 'ss01', 'ss03';
+    /* Telegram inserts the keyboard above content; don't fight it. */
+    overscroll-behavior-y: none;
+  }
+  ::selection {
+    background: rgba(108, 99, 255, 0.35);
+  }
+  input,
+  textarea {
+    font-family: inherit;
+  }
+  /* Hide number input spinners — we render our own steppers when needed. */
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+}
+
+@layer components {
+  .container-app {
+    @apply mx-auto w-full max-w-[480px] px-4;
+  }
+  .hairline {
+    @apply border-t border-border;
+  }
+  /* The "atmosphere" — a faint dotted grid so flat surfaces breathe. */
+  .atmosphere {
+    background-image:
+      radial-gradient(60% 50% at 50% 0%, rgba(108, 99, 255, 0.10), transparent 70%),
+      radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.035) 1px, transparent 0);
+    background-size: auto, 22px 22px;
+  }
+  .ring-subject {
+    box-shadow: inset 0 0 0 1px var(--subject, theme('colors.primary.DEFAULT'));
+  }
+  .label-eyebrow {
+    @apply font-mono uppercase tracking-ticker text-[10px] text-ink-muted;
+  }
+  .num-badge {
+    @apply inline-flex h-7 min-w-[28px] items-center justify-center rounded-full border border-border bg-surface-2 px-2 font-mono text-[12px] tabular-nums text-ink;
+  }
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.04),
+      rgba(255, 255, 255, 0.09),
+      rgba(255, 255, 255, 0.04)
+    );
+    background-size: 200% 100%;
+    @apply animate-shimmer rounded-md;
+  }
+}
+
+/* KaTeX — calm down its default white-on-white assumptions. */
+.katex {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 1em;
+}
+.katex-display {
+  margin: 0;
+  padding: 0;
+}
+.formula-glow {
+  background: radial-gradient(
+    120% 100% at 50% 50%,
+    rgba(108, 99, 255, 0.12),
+    transparent 70%
+  );
+}
+
+/* Lucide — enforce single stroke style across the app. */
+.lucide {
+  stroke-width: 1.5;
+}
