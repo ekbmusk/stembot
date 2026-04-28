@@ -64,3 +64,16 @@ app.include_router(bot.router)
 @app.get("/api/health")
 def health():
     return {"status": "ok"}
+
+
+if __name__ == "__main__":
+    # Used by container entrypoint. Reads $PORT directly so we don't depend
+    # on shell expansion in the Dockerfile CMD — Railway / Render / Fly all
+    # inject PORT via env, and exec-form CMDs leave shell vars unexpanded.
+    import uvicorn
+
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=int(os.getenv("PORT", "8000")),
+    )

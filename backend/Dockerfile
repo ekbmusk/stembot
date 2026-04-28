@@ -11,5 +11,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 EXPOSE 8000
-# Railway/Render inject $PORT; default to 8000 for local & docker-compose use.
-CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+# Python entrypoint reads $PORT itself — survives builders that don't
+# expand shell vars in exec-form CMDs (e.g. Railway's auto-generated start).
+CMD ["python", "main.py"]
