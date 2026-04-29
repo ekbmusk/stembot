@@ -43,8 +43,7 @@ export default function Onboarding() {
             <span className="text-primary-soft">STEM-ді шеш.</span>
           </h1>
           <p className="text-[14px] text-ink-muted">
-            Физика, химия, биология, математика, инженерия — тек теория емес,
-            қолданбалы есептер.
+            Физика, математика, инженерия — тек теория емес, қолданбалы есептер.
           </p>
         </header>
 

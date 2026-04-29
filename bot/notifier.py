@@ -26,18 +26,21 @@ def _format(notification: dict) -> tuple[str, Optional[int]]:
         return payload.get("text") or "", None
 
     if n_type == "new_submission":
-        title = payload.get("case_title") or f"Кейс #{payload.get('case_id', '?')}"
+        title = payload.get("case_title") or f"Кейс №{payload.get('case_id', '?')}"
         student = payload.get("student_name") or "Оқушы"
         username = payload.get("student_username")
         suffix = f" (@{username})" if username else ""
         return (
-            f"🆕 *Жаңа тапсырыс*\n\n{student}{suffix} «{title}» кейсін тапсырды.",
+            f"*Жаңа тапсырыс*\n\n{student}{suffix} «{title}» кейсін тапсырды.",
             payload.get("case_id"),
         )
 
     if n_type == "case_reminder":
-        title = payload.get("case_title") or f"Кейс #{payload.get('case_id', '?')}"
-        return (f"⏰ Еске салу: «{title}» кейсін аяқтауды ұмытпа.", payload.get("case_id"))
+        title = payload.get("case_title") or f"Кейс №{payload.get('case_id', '?')}"
+        return (
+            f"Еске салу: «{title}» кейсін аяқтауды ұмытпа.",
+            payload.get("case_id"),
+        )
 
     return payload.get("text") or n_type or "Жаңа хабар", payload.get("case_id")
 
