@@ -266,10 +266,17 @@ export default function Home() {
       <SplashCurtain visible={splashShown} />
 
       <div
-        className="transition-all duration-[800ms] ease-[cubic-bezier(0.34,1.4,0.64,1)] motion-reduce:transition-none"
+        className="motion-reduce:!transform-none motion-reduce:transition-none"
         style={{
           opacity: splashShown ? 0 : 1,
-          transform: splashShown ? 'translateY(64px)' : 'translateY(0)',
+          transform: splashShown ? 'translateY(45vh)' : 'translateY(0)',
+          // Opacity fades in fast so content "appears" while still rising,
+          // transform takes ~1.05s with an ease-out-expo curve so the rise
+          // overlaps the curtain's parallax exit instead of settling early.
+          transition:
+            'opacity 480ms ease-out, transform 1050ms cubic-bezier(0.16, 1, 0.3, 1)',
+          transitionDelay: splashShown ? '0ms' : '120ms',
+          willChange: 'transform, opacity',
         }}
       >
       <TopBar
