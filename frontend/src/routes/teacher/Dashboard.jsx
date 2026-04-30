@@ -32,7 +32,12 @@ import {
 import { TopBar } from '../../components/Layout/TopBar';
 import { Avatar } from '../../components/ui/Avatar';
 import { Badge } from '../../components/ui/Badge';
-import { formatScore, formatStatus, statusTone } from '../../lib/format';
+import {
+  formatScore,
+  formatStatus,
+  statusTone,
+  studentName,
+} from '../../lib/format';
 import { TOPICS, TOPIC_ORDER, caseTopic } from '../../lib/topics';
 
 const STATUS_COLORS = {
@@ -53,6 +58,11 @@ const TOOLTIP_STYLE = {
   fontSize: 12,
   padding: '6px 10px',
 };
+const TOOLTIP_LABEL_STYLE = { color: 'rgba(255,255,255,0.92)', fontWeight: 600 };
+// Recharts paints item rows in the series colour by default — on dark bg some
+// (e.g. yellow on yellow tooltip) become unreadable. Pin to ink-muted instead.
+const TOOLTIP_ITEM_STYLE = { color: 'rgba(255,255,255,0.78)' };
+
 
 function StatTile({ label, value, icon: Icon, hint }) {
   return (
@@ -234,7 +244,10 @@ export default function Dashboard() {
             <Tooltip
               cursor={{ fill: 'rgba(255,255,255,0.04)' }}
               contentStyle={TOOLTIP_STYLE}
-              labelStyle={{ color: 'rgba(255,255,255,0.92)' }}
+              labelStyle={TOOLTIP_LABEL_STYLE}
+              itemStyle={TOOLTIP_ITEM_STYLE}
+              formatter={(v) => [`${v} кейс`, '']}
+              separator=""
             />
             <Bar dataKey="value" radius={[6, 6, 0, 0]}>
               {byTopic.map((d, i) => (
@@ -251,7 +264,10 @@ export default function Dashboard() {
           <PieChart>
             <Tooltip
               contentStyle={TOOLTIP_STYLE}
-              formatter={(v, n) => [`${v}`, n]}
+              labelStyle={TOOLTIP_LABEL_STYLE}
+              itemStyle={TOOLTIP_ITEM_STYLE}
+              formatter={(v, n) => [`${v} тапсырыс`, n]}
+              separator=" — "
             />
             <Pie
               data={statusBreakdown}
@@ -298,7 +314,14 @@ export default function Dashboard() {
               width={24}
               allowDecimals={false}
             />
-            <Tooltip contentStyle={TOOLTIP_STYLE} cursor={{ stroke: 'rgba(255,255,255,0.15)' }} />
+            <Tooltip
+              contentStyle={TOOLTIP_STYLE}
+              labelStyle={TOOLTIP_LABEL_STYLE}
+              itemStyle={TOOLTIP_ITEM_STYLE}
+              cursor={{ stroke: 'rgba(255,255,255,0.15)' }}
+              formatter={(v) => [`${v} тапсырыс`, '']}
+              separator=""
+            />
             <Area
               type="monotone"
               dataKey="value"
@@ -332,8 +355,7 @@ export default function Dashboard() {
                     <Avatar user={s} size={36} />
                     <div className="min-w-0 flex-1">
                       <p className="truncate font-display text-[14px] tracking-tight text-ink">
-                        {[s.first_name, s.last_name].filter(Boolean).join(' ') ||
-                          `Оқушы #${s.id}`}
+                        {studentName(s, s.id)}
                       </p>
                       <p className="font-mono text-[11px] text-ink-faint">
                         {total > 0 ? `${a.done}/${total} тапсырыс` : 'тапсырыс жоқ'}
@@ -369,6 +391,7 @@ export default function Dashboard() {
               .slice(0, 5)
               .map((s) => {
                 const c = cases.find((x) => x.id === s.case_id);
+                const student = students.find((x) => x.id === s.user_id);
                 return (
                   <li key={s.id}>
                     <Link
@@ -379,8 +402,8 @@ export default function Dashboard() {
                         <p className="truncate font-display text-[14px] tracking-tight text-ink">
                           {c?.title_kk ?? `Кейс №${s.case_id}`}
                         </p>
-                        <p className="font-mono text-[11px] text-ink-faint">
-                          Оқушы #{s.user_id} ·{' '}
+                        <p className="truncate font-mono text-[11px] text-ink-faint">
+                          {studentName(student, s.user_id)} ·{' '}
                           {new Date(
                             s.submitted_at ?? s.started_at,
                           ).toLocaleDateString('kk-KZ')}

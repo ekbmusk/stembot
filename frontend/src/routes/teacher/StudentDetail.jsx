@@ -9,7 +9,12 @@ import { Avatar } from '../../components/ui/Avatar';
 import { Badge } from '../../components/ui/Badge';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { cn } from '../../lib/cn';
-import { formatScore, formatStatus, statusTone } from '../../lib/format';
+import {
+  formatScore,
+  formatStatus,
+  statusTone,
+  studentName,
+} from '../../lib/format';
 import { caseTopic, topicMeta, topicStyle } from '../../lib/topics';
 
 const COMPLETED = new Set(['submitted', 'graded']);
@@ -103,19 +108,14 @@ export default function StudentDetail() {
 
   return (
     <>
-      <TopBar
-        back
-        eyebrow="оқушы"
-        title={[student.first_name, student.last_name].filter(Boolean).join(' ') || `#${student.id}`}
-      />
+      <TopBar back eyebrow="оқушы" title={studentName(student, student.id)} />
 
       {/* Profile header */}
       <section className="mb-4 flex items-center gap-3 rounded-2xl border border-border bg-surface p-4">
         <Avatar user={student} size={56} />
         <div className="min-w-0 flex-1">
           <p className="truncate font-display text-[16px] tracking-tight text-ink">
-            {[student.first_name, student.last_name].filter(Boolean).join(' ') ||
-              `Оқушы #${student.id}`}
+            {studentName(student, student.id)}
           </p>
           {student.username ? (
             <p className="font-mono text-[12px] text-ink-muted">@{student.username}</p>

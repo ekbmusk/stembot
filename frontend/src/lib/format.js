@@ -42,3 +42,17 @@ export function statusTone(status) {
       return 'muted';
   }
 }
+
+/**
+ * Display label for a student record. Order: full name → @username → ID stub.
+ */
+export function studentName(student, fallbackId) {
+  if (!student) return `Оқушы #${fallbackId}`;
+  const full = [student.first_name, student.last_name]
+    .filter(Boolean)
+    .join(' ')
+    .trim();
+  if (full) return full;
+  if (student.username) return `@${student.username}`;
+  return `Оқушы #${student.id}`;
+}

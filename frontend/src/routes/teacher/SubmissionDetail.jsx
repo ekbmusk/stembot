@@ -4,13 +4,18 @@ import { useParams } from 'react-router-dom';
 
 import { getCase } from '../../api/cases';
 import { getSubmission } from '../../api/submissions';
-import { gradeSubmission } from '../../api/teacher';
+import { gradeSubmission, listStudents } from '../../api/teacher';
 import { FormulaRenderer } from '../../components/FormulaRenderer';
 import { TopBar } from '../../components/Layout/TopBar';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Card, CardBody } from '../../components/ui/Card';
-import { formatScore, formatStatus, statusTone } from '../../lib/format';
+import {
+  formatScore,
+  formatStatus,
+  statusTone,
+  studentName,
+} from '../../lib/format';
 import { useUiStore } from '../../store/uiStore';
 
 function readableAnswer(payload, type) {
@@ -56,6 +61,7 @@ export default function SubmissionDetail() {
   const showToast = useUiStore((s) => s.showToast);
   const [submission, setSubmission] = useState(null);
   const [caseData, setCaseData] = useState(null);
+  const [student, setStudent] = useState(null);
   const [grades, setGrades] = useState({}); // { [task_id]: { score, feedback } }
   const [overallFeedback, setOverallFeedback] = useState('');
   const [saving, setSaving] = useState(false);
@@ -64,8 +70,12 @@ export default function SubmissionDetail() {
     (async () => {
       const sub = await getSubmission(Number(id));
       setSubmission(sub);
-      const c = await getCase(sub.case_id);
+      const [c, allStudents] = await Promise.all([
+        getCase(sub.case_id),
+        listStudents().catch(() => []),
+      ]);
       setCaseData(c);
+      setStudent(allStudents.find((s) => s.id === sub.user_id) ?? null);
       const seed = {};
       for (const a of sub.answers) {
         seed[a.task_id] = { score: a.score ?? '', feedback: a.feedback ?? '' };
@@ -118,7 +128,7 @@ export default function SubmissionDetail() {
     <>
       <TopBar
         back
-        eyebrow={`оқушы #${submission.user_id}`}
+        eyebrow={studentName(student, submission.user_id)}
         title={caseData.title_kk}
       />
 
