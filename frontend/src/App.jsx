@@ -15,6 +15,7 @@ import CasesIndex from './routes/teacher/CasesIndex';
 import Dashboard from './routes/teacher/Dashboard';
 import GroupMatrix from './routes/teacher/GroupMatrix';
 import Groups from './routes/teacher/Groups';
+import StudentDetail from './routes/teacher/StudentDetail';
 import SubmissionDetail from './routes/teacher/SubmissionDetail';
 import { useUserStore } from './store/userStore';
 
@@ -78,6 +79,7 @@ export default function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="groups" element={<Groups />} />
           <Route path="groups/:id" element={<GroupMatrix />} />
+          <Route path="students/:id" element={<StudentDetail />} />
           <Route path="submissions/:id" element={<SubmissionDetail />} />
           <Route path="cases" element={<CasesIndex />} />
           <Route path="cases/new" element={<CaseEditor />} />

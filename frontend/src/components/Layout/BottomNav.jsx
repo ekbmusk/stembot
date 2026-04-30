@@ -20,7 +20,6 @@ const studentTabs = [
 
 const teacherTabs = [
   { to: '/teacher/dashboard', label: 'Шолу', icon: LayoutDashboard },
-  { to: '/teacher/groups', label: 'Топтар', icon: Users },
   { to: '/teacher/cases', label: 'Кейстер', icon: Notebook },
   { to: '/teacher/broadcast', label: 'Хабар', icon: MessageSquare },
 ];
