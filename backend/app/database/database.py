@@ -207,3 +207,5 @@ def create_tables() -> None:
     with SessionLocal() as db:
         _seed_groups(db)
         _seed_authored_cases(db)
+        from app.database.mock_seed import seed_mock_students
+        seed_mock_students(db)
