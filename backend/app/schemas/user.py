@@ -24,5 +24,6 @@ class UserOut(BaseModel):
     last_name: Optional[str] = None
     username: Optional[str] = None
     photo_url: Optional[str] = None
+    language_code: Optional[str] = None
     role: Literal["student", "teacher"]
     created_at: datetime
